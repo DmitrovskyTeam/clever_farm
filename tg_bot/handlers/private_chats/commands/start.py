@@ -5,8 +5,10 @@ from tg_bot.loader import dp
 from tg_bot.utils.set_bot_commands import set_commands
 
 
-@dp.message_handler(CommandStart())
+@dp.message_handler(CommandStart(), chat_type='private')
 async def bot_start(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
     await set_commands(dp=dp,
                        chat_id=str(message.chat.id))
     await message.answer('\n'.join(
@@ -18,5 +20,4 @@ async def bot_start(message: types.Message):
             'Воспользуйся командами из меню ниже.'
         ]
     ))
-    await dp.bot.delete_message(chat_id=message.chat.id,
-                                message_id=message.message_id)
+

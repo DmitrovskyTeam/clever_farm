@@ -15,7 +15,7 @@ async def set_commands(dp: Dispatcher, chat_id: str):
             types.BotCommand("start", "Запустить бота"),
             types.BotCommand("airtemp", "Темпераутра воздуха"),
             types.BotCommand("airhum", "Влажность воздуха"),
-            types.BotCommand("airhum", "Влажность грунта"),
+            types.BotCommand("groundhum", "Влажность грунта"),
             types.BotCommand("control", "Управление"),
             types.BotCommand("help", "Вывести справку"),
         ],

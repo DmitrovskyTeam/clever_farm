@@ -20,4 +20,3 @@ async def bot_start(message: types.Message):
             'Воспользуйся командами из меню ниже.'
         ]
     ))
-

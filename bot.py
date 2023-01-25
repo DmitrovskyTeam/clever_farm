@@ -2,7 +2,7 @@ from aiogram import executor
 
 from tg_bot.loader import dp
 # import middlewares, filters,
-from tg_bot import handlers
+from tg_bot import filters, handlers
 from tg_bot.utils.notify_admins import on_startup_notify, on_shutdown_notify
 
 

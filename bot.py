@@ -1,9 +1,9 @@
 from aiogram import executor
 
-from loader import dp
+from tg_bot.loader import dp
 # import middlewares, filters,
-import handlers
-from utils.notify_admins import on_startup_notify, on_shutdown_notify
+from tg_bot import handlers
+from tg_bot.utils.notify_admins import on_startup_notify, on_shutdown_notify
 
 
 async def on_startup(dispatcher):

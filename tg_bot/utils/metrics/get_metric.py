@@ -1,6 +1,5 @@
 import asyncio
 import datetime
-import time
 
 from farm_api_module import FarmApiModule
 from tg_bot.utils.db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues

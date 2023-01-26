@@ -21,8 +21,7 @@ async def air_temp_request(message: types.Message):
     text = list()
     for i in range(0, len(sensor_values)):
         text.append(
-            f"<b>{sensor_values[i].get('timestamp').split('.')[0]}:\t\t</b>{(sensor_values[i].get('sensor1') + sensor_values[i].get('sensor2') + sensor_values[i].get('sensor3') + sensor_values[i].get('sensor4')) / 4}")
-    # print(text)
+            f"<b>{sensor_values[i].get('timestamp').split('.')[0]}:   </b>{(sensor_values[i].get('sensor1') + sensor_values[i].get('sensor2') + sensor_values[i].get('sensor3') + sensor_values[i].get('sensor4')) / 4}")
     await message.answer(text='\n'.join(
         ['Последние 10 средних показаний с датчика температуры воздуха:',
          *text]

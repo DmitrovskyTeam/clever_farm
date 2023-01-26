@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 
+from data import SENSORS_TIMEOUT_REQUEST
 from farm_api_module import FarmApiModule
 from tg_bot.utils.db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues
 
@@ -41,4 +42,4 @@ async def get_metric():
         tem_hum_values.clear()
         cur_ground_hum.clear()
         ground_hum_values.clear()
-        await asyncio.sleep(60*3)
+        await asyncio.sleep(SENSORS_TIMEOUT_REQUEST)

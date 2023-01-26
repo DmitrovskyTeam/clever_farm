@@ -1,23 +1,9 @@
-import asyncio
-import concurrent
-
 from aiogram import executor
 
 from tg_bot.loader import dp
 # import middlewares, filters,
 from tg_bot import filters, handlers
-from tg_bot.utils import on_startup_notify, on_shutdown_notify, on_startup_sqlite, on_shutdown_sqlite
-
-
-async def run_blocking_io(func, *args):
-    loop = asyncio.get_running_loop()
-    with concurrent.futures.ThreadPoolExecutor() as pool:
-        result = await loop.run_in_executor(
-            pool,
-            func,
-            *args
-        )
-    return result
+from tg_bot.utils import on_startup_notify, on_shutdown_notify, on_startup_sqlite, on_shutdown_sqlite, run_blocking_io
 
 
 async def on_startup(dispatcher):

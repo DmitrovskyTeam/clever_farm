@@ -6,7 +6,7 @@ from tg_bot.utils.db_api import TempHumValues
 
 
 @dp.message_handler(CommandAirHum(), chat_type='private')
-async def air_temp_request(message: types.Message):
+async def air_hum_request(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
     sensor_values = list()

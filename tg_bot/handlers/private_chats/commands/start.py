@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.filters import CommandStart
 
 from tg_bot.loader import dp
-from tg_bot.utils.set_bot_commands import set_commands
+from tg_bot.utils import set_commands
 
 
 @dp.message_handler(CommandStart(), chat_type='private')

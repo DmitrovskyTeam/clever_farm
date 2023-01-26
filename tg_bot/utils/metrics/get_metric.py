@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import time
 
 from farm_api_module import FarmApiModule
@@ -18,6 +19,7 @@ async def get_metric():
                 temperature=cur_air_temp_hum[i].get('temperature'),
                 humidity=cur_air_temp_hum[i].get('humidity'))
         TempHumValues.create(
+            timestamp=datetime.datetime.now(),
             sensor1=tem_hum_values.get('1'),
             sensor2=tem_hum_values.get('2'),
             sensor3=tem_hum_values.get('3'),
@@ -28,6 +30,7 @@ async def get_metric():
             ground_hum_values[f"{int(cur_ground_hum[i].get('id'))}"] = GroundSensor.create(
                 humidity=cur_ground_hum[i].get('humidity'))
         GroundValues.create(
+            timestamp=datetime.datetime.now(),
             sensor1=ground_hum_values.get('1'),
             sensor2=ground_hum_values.get('2'),
             sensor3=ground_hum_values.get('3'),
@@ -39,4 +42,4 @@ async def get_metric():
         tem_hum_values.clear()
         cur_ground_hum.clear()
         ground_hum_values.clear()
-        await asyncio.sleep(60)
+        await asyncio.sleep(60*3)

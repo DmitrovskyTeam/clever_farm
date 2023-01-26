@@ -16,12 +16,14 @@ async def air_temp_request(message: types.Message):
             'sensor1': sensor_value.sensor1.humidity,
             'sensor2': sensor_value.sensor2.humidity,
             'sensor3': sensor_value.sensor3.humidity,
-            'sensor4': sensor_value.sensor4.humidity
+            'sensor4': sensor_value.sensor4.humidityб
+            'sensor5': sensor_value.sensor5.humidity,
+            'sensor6': sensor_value.sensor6.humidity
         })
     text = list()
     for i in range(0, len(sensor_values)):
         text.append(
-            f"<b>{sensor_values[i].get('timestamp').split('.')[0]}:   </b>{(sensor_values[i].get('sensor1') + sensor_values[i].get('sensor2') + sensor_values[i].get('sensor3') + sensor_values[i].get('sensor4')) / 4}")
+            f"<b>{sensor_values[i].get('timestamp').split('.')[0]}:   </b>{(sensor_values[i].get('sensor1') + sensor_values[i].get('sensor2') + sensor_values[i].get('sensor3') + sensor_values[i].get('sensor4') + sensor_values[i].get('sensor5') + sensor_values[i].get('sensor6')) / 4}")
     await message.answer(text='\n'.join(
         [
             'Последние 10 средних показаний с датчика влажности воздуха:',

@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import executor
 
 from tg_bot.loader import dp
@@ -10,7 +12,7 @@ from tg_bot.utils import on_startup_notify, on_shutdown_notify, on_startup_sqlit
 async def on_startup(dispatcher):
     await on_startup_notify(dispatcher)
     await run_blocking_io(on_startup_sqlite)
-    await run_blocking_io(get_metric)
+    asyncio.create_task(get_metric())
 
 
 async def on_shutdown(dispatcher):

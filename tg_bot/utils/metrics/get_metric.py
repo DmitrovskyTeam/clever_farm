@@ -1,10 +1,11 @@
+import asyncio
 import time
 
 from farm_api_module import FarmApiModule
 from tg_bot.utils.db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues
 
 
-def get_metric():
+async def get_metric():
     farm_module = FarmApiModule()
     cur_air_temp_hum = list()
     tem_hum_values = dict()
@@ -38,4 +39,4 @@ def get_metric():
         tem_hum_values.clear()
         cur_ground_hum.clear()
         ground_hum_values.clear()
-        time.sleep(60)
+        await asyncio.sleep(60)

@@ -1,3 +1,5 @@
+import datetime
+
 from peewee import Model, FloatField, DateTimeField, ForeignKeyField
 
 from . import db
@@ -18,7 +20,7 @@ class GroundSensor(BaseModel):
 
 
 class TempHumValues(BaseModel):
-    timestamp = DateTimeField(formats='%Y-%m-%d %H:%M:%S')
+    timestamp = DateTimeField(formats='%Y-%m-%d %H:%M:%S', default=datetime.datetime.now())
     sensor1 = ForeignKeyField(TempHumSensor, backref='all_values')
     sensor2 = ForeignKeyField(TempHumSensor, backref='all_values')
     sensor3 = ForeignKeyField(TempHumSensor, backref='all_values')
@@ -26,7 +28,7 @@ class TempHumValues(BaseModel):
 
 
 class GroundValues(BaseModel):
-    timestamp = DateTimeField(formats='%Y-%m-%d %H:%M:%S')
+    timestamp = DateTimeField(formats='%Y-%m-%d %H:%M:%S', default=datetime.datetime.now())
     sensor1 = ForeignKeyField(GroundSensor, backref='all_values')
     sensor2 = ForeignKeyField(GroundSensor, backref='all_values')
     sensor3 = ForeignKeyField(GroundSensor, backref='all_values')

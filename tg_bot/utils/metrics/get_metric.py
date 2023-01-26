@@ -6,11 +6,11 @@ from tg_bot.utils.db_api import TempHumSensor, TempHumValues, GroundSensor, Grou
 
 def get_metric():
     farm_module = FarmApiModule()
+    cur_air_temp_hum = list()
+    tem_hum_values = dict()
+    cur_ground_hum = list()
+    ground_hum_values = dict()
     while True:
-        cur_air_temp_hum = list()
-        tem_hum_values = dict()
-        cur_ground_hum = list()
-        ground_hum_values = dict()
         for i in range(0, 4):
             cur_air_temp_hum.append(farm_module.get_air_temp_hum(sensor_id=i + 1))
             tem_hum_values[f"{int(cur_air_temp_hum[i].get('id'))}"] = TempHumSensor.create(
@@ -34,4 +34,8 @@ def get_metric():
             sensor5=ground_hum_values.get('5'),
             sensor6=ground_hum_values.get('6'),
         )
+        cur_air_temp_hum.clear()
+        tem_hum_values.clear()
+        cur_ground_hum.clear()
+        ground_hum_values.clear()
         time.sleep(60)

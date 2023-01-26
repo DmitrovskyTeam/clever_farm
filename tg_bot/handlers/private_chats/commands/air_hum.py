@@ -16,7 +16,7 @@ async def air_temp_request(message: types.Message):
             'sensor1': sensor_value.sensor1.humidity,
             'sensor2': sensor_value.sensor2.humidity,
             'sensor3': sensor_value.sensor3.humidity,
-            'sensor4': sensor_value.sensor4.humidityб
+            'sensor4': sensor_value.sensor4.humidity,
             'sensor5': sensor_value.sensor5.humidity,
             'sensor6': sensor_value.sensor6.humidity
         })

@@ -1,5 +1,6 @@
 from aiogram import types
 
+from graph_creator import GraphCreator
 from tg_bot.filters.commands import CommandGroundHum
 from tg_bot.loader import dp
 from tg_bot.utils.db_api import GroundValues
@@ -30,3 +31,14 @@ async def ground_sensors_request(message: types.Message):
             *text
         ]
     ))
+    data_x = [sensor_value.get('timestamp').split(' ')[1].split('.')[0] for sensor_value in sensor_values]
+    data_y = [(sensor_value.get('sensor1') + sensor_value.get('sensor2') + sensor_value.get(
+        'sensor3') + sensor_value.get('sensor4') + sensor_value.get('sensor5') + sensor_value.get('sensor6')) / 6 for
+              sensor_value in sensor_values]
+    data_y.reverse()
+    graph_creator = GraphCreator()
+    graph_creator.create_graph(
+        data_x=data_x,
+        data_y=data_y
+    )
+    await message.answer_photo(photo=open('temp.png', "rb"))

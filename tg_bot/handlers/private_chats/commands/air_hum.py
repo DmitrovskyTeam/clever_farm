@@ -22,7 +22,7 @@ async def air_hum_request(message: types.Message):
     text = list()
     for i in range(0, len(sensor_values)):
         text.append(
-            f"<b>{sensor_values[i].get('timestamp').split('.')[0]}:   </b>{(sensor_values[i].get('sensor1') + sensor_values[i].get('sensor2') + sensor_values[i].get('sensor3') + sensor_values[i].get('sensor4')) / 4}")
+            f"<b>{sensor_values[i].get('timestamp').split('.')[0]}:   </b>{round((sensor_values[i].get('sensor1') + sensor_values[i].get('sensor2') + sensor_values[i].get('sensor3') + sensor_values[i].get('sensor4')) / 4, 2)}")
     await message.answer(text='\n'.join(
         [
             'Последние 10 средних показаний с датчика влажности воздуха:',
@@ -30,8 +30,8 @@ async def air_hum_request(message: types.Message):
         ]
     ))
     data_x = [sensor_value.get('timestamp').split(' ')[1].split('.')[0] for sensor_value in sensor_values]
-    data_y = [(sensor_value.get('sensor1') + sensor_value.get('sensor2') + sensor_value.get(
-        'sensor3') + sensor_value.get('sensor4')) / 4 for sensor_value in sensor_values]
+    data_y = [round((sensor_value.get('sensor1') + sensor_value.get('sensor2') + sensor_value.get(
+        'sensor3') + sensor_value.get('sensor4')) / 4, 2) for sensor_value in sensor_values]
     data_y.reverse()
     graph_creator = GraphCreator()
     graph_creator.create_graph(

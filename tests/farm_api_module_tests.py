@@ -74,11 +74,15 @@ class BasicModuleTest(unittest.TestCase):
     def test_control_watering(self):
         self.assertEqual(None, self.api_module.control_watering(pomp_id=0, state=-1))
         self.assertEqual(None, self.api_module.control_watering(pomp_id=1, state=-1))
-        self.assertDictEqual({'code': 200, 'message': 'State success change. Watering success open'},
-                             self.api_module.control_watering(pomp_id=1, state=1))
         self.assertDictEqual({'code': 200, 'message': 'State success change. Watering success close'},
                              self.api_module.control_watering(pomp_id=1, state=0))
         self.assertEqual(None, self.api_module.control_watering(pomp_id=-1, state=1))
+        for i in range(1, 7):
+            self.assertDictEqual({'code': 200, 'message': 'State success change. Watering success open'},
+                                 self.api_module.control_watering(pomp_id=i, state=1))
+        for i in range(1, 7):
+            self.assertDictEqual({'code': 200, 'message': 'State success change. Watering success close'},
+                                 self.api_module.control_watering(pomp_id=i, state=0))
         session = requests.Session()
         self.assertDictEqual({'code': 404, 'message': 'State value or id not found'},
                              session.patch(url='https://dt.miet.ru/ppo_it/api/watering',
@@ -120,6 +124,16 @@ class BasicModuleTest(unittest.TestCase):
                              session.patch(url='https://dt.miet.ru/ppo_it/api/watering',
                                            params={
                                                'id': str(1),
+                                               'state': str(10)
+                                           }).json())
+        self.assertDictEqual({'code': 404, 'message': 'State value not found'},
+                             session.patch(url='https://dt.miet.ru/ppo_it/api/watering',
+                                           params={
+                                               'id': str(1)
+                                           }).json())
+        self.assertDictEqual({'code': 404, 'message': 'State value not found'},
+                             session.patch(url='https://dt.miet.ru/ppo_it/api/watering',
+                                           params={
                                                'state': str(10)
                                            }).json())
         session.close()

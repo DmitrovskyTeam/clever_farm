@@ -36,6 +36,7 @@ async def ground_sensors_request(message: types.Message):
         'sensor3') + sensor_value.get('sensor4') + sensor_value.get('sensor5') + sensor_value.get('sensor6')) / 6, 2)
               for sensor_value in sensor_values]
     data_y.reverse()
+    data_x.reverse()
     graph_creator = GraphCreator()
     graph_creator.create_graph(
         data_x=data_x,

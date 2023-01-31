@@ -33,6 +33,7 @@ async def air_hum_request(message: types.Message):
     data_y = [round((sensor_value.get('sensor1') + sensor_value.get('sensor2') + sensor_value.get(
         'sensor3') + sensor_value.get('sensor4')) / 4, 2) for sensor_value in sensor_values]
     data_y.reverse()
+    data_x.reverse()
     graph_creator = GraphCreator()
     graph_creator.create_graph(
         data_x=data_x,

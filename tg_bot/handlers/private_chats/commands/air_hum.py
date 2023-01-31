@@ -36,6 +36,7 @@ async def air_hum_request(message: types.Message):
     graph_creator = GraphCreator()
     graph_creator.create_graph(
         data_x=data_x,
-        data_y=data_y
+        data_y=data_y,
+        filename='air_hum.png'
     )
-    await message.answer_photo(photo=open('temp.png', "rb"))
+    await message.answer_photo(photo=open('air_hum.png', "rb"))

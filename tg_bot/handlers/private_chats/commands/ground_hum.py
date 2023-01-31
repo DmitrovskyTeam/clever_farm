@@ -39,6 +39,7 @@ async def ground_sensors_request(message: types.Message):
     graph_creator = GraphCreator()
     graph_creator.create_graph(
         data_x=data_x,
-        data_y=data_y
+        data_y=data_y,
+        filename='ground_hum.png'
     )
-    await message.answer_photo(photo=open('temp.png', "rb"))
+    await message.answer_photo(photo=open('ground_hum.png', "rb"))

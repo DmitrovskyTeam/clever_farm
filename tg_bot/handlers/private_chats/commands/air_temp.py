@@ -36,6 +36,7 @@ async def air_temp_request(message: types.Message):
     graph_creator = GraphCreator()
     graph_creator.create_graph(
         data_x=data_x,
-        data_y=data_y
+        data_y=data_y,
+        filename='air_temp.png'
     )
-    await message.answer_photo(photo=open('temp.png', "rb"))
+    await message.answer_photo(photo=open('air_temp.png', "rb"))

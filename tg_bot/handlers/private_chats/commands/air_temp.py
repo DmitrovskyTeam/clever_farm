@@ -15,7 +15,7 @@ temp_sensor_list = set()
 async def air_temp_request(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
-    global temp_sensor_list
+    global hum_sensor_list
     temp_sensor_list.clear()
     await message.answer(text='Выберите, информацию с каких датчиков температуры Вы хотите получить',
                          reply_markup=get_air_temp_hum_keyboard(param='temp', sensor_list=temp_sensor_list))
@@ -26,7 +26,7 @@ async def add_item_to_temp_plot(call: CallbackQuery, callback_data: dict):
     await call.answer(cache_time=1)
     action = callback_data.get('action').split('_')[0]
     sensor_id = int(callback_data.get('action').split('_')[1])
-    global temp_sensor_list
+    global hum_sensor_list
     temp_sensor_list.add(sensor_id) if action == 'add' else temp_sensor_list.remove(sensor_id)
     await dp.bot.edit_message_reply_markup(
         reply_markup=get_air_temp_hum_keyboard(param='temp', sensor_list=temp_sensor_list),
@@ -37,7 +37,7 @@ async def add_item_to_temp_plot(call: CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(air_tem_him_callback_data.filter(param='complete_temp'))
 async def send_info(call: CallbackQuery):
-    global temp_sensor_list
+    global hum_sensor_list
     sensor_values = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(10)
     message_text = list()
     for sensor_num in temp_sensor_list:
@@ -67,7 +67,7 @@ async def send_info(call: CallbackQuery):
                                    message_id=call.message.message_id,
                                    reply_markup=None,
                                    text='\n'.join(message_text))
-    data_x = [sensor_value.timestamp.split(' ')[1].split('.')[0] for sensor_value in sensor_values]
+    data_x = get_reverse_list([sensor_value.timestamp.split(' ')[1].split('.')[0] for sensor_value in sensor_values])
     data_x.reverse()
     data = list()
     for sensor_num in temp_sensor_list:

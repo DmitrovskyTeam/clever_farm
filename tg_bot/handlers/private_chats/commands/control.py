@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.types import CallbackQuery
 
+from db_api import TempHumValues
 from farm_api_module import FarmApiModule
 from tg_bot.filters.commands import CommandControl
 from tg_bot.keyboards.inline import control_markup, control_device, get_action_markup
@@ -36,11 +37,38 @@ async def no_action_waterflows(call: CallbackQuery):
 )
 async def no_waterflow_system(call: types.CallbackQuery, callback_data: dict):
     device = callback_data.get('device')
+    if device == 'forks':
+        last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)
+        cur_temp = (
+                               last_sensors_value.sensor1.temperature + last_sensors_value.sensor2.temperature + last_sensors_value.sensor3.temperature + last_sensors_value.sensor4.temperature) / 4
+        if cur_temp < 25:
+            message_text = '\n\n<b>Температура воздуха ниже 25°. Возможность открытия форточек сейчас заблокирована</b>'
+            param = 'close'
+
+        elif cur_temp > 34:
+            message_text = '\n\n<b>Температура воздуха выше 34°. Возможность закрытия форточек сейчас заблокирована</b>'
+            param = 'open'
+        else:
+            message_text = ''
+            param = 'all'
+    elif device == 'air_hum_system':
+        last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)[0]
+        cur_hum = (
+                              last_sensors_value.sensor1.humidity + last_sensors_value.sensor2.humidity + last_sensors_value.sensor3.humidity + last_sensors_value.sensor4.humidity) / 4
+        if cur_hum < 40:
+            message_text = '\n\n<b>Влажность воздуха ниже 25°. Возможность выключения системы увлажнения сейчас заблокирована</b>'
+            param = 'close'
+        elif cur_hum > 80:
+            message_text = '\n\n<b>Влажность воздуха выше 34°. Возможность включения системы увлажнения сейчас заблокирована</b>'
+            param = 'open'
+        else:
+            message_text = ''
+            param = 'all'
     await dp.bot.edit_message_text(
         chat_id=call.message.chat.id,
         message_id=call.message.message_id,
-        text='Выберите действие',
-        reply_markup=get_action_markup(device)
+        text='Выберите действие' + message_text,
+        reply_markup=get_action_markup(device, param)
     )
 
 

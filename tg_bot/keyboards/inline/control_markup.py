@@ -62,26 +62,48 @@ control_markup = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
-def get_action_markup(device: str):
+def get_action_markup(device: str, param: str):
+    inline_keyboard = list()
+    if param == 'all' or param == 'open':
+        inline_keyboard.append([
+            InlineKeyboardButton(
+                text='Открыть' if device == 'forks' else 'Включить',
+                callback_data=control_device.new(
+                    device=device,
+                    action='on'
+                )
+            )
+        ])
+    if param == 'all' or param == 'close':
+        inline_keyboard.append([
+            InlineKeyboardButton(
+                text='Закрыть' if device == 'forks' else 'Выключить',
+                callback_data=control_device.new(
+                    device=device,
+                    action='off'
+                )
+            )
+        ])
     return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text='Открыть' if device == 'forks' else 'Включить',
-                    callback_data=control_device.new(
-                        device=device,
-                        action='on'
-                    )
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    text='Закрыть' if device == 'forks' else 'Выключить',
-                    callback_data=control_device.new(
-                        device=device,
-                        action='off'
-                    )
-                )
-            ]
-        ]
+        inline_keyboard=inline_keyboard
+        # [
+        #     [
+        #         InlineKeyboardButton(
+        #             text='Открыть' if device == 'forks' else 'Включить',
+        #             callback_data=control_device.new(
+        #                 device=device,
+        #                 action='on'
+        #             )
+        #         )
+        #     ] if param == 'all' or param == 'open' else [],
+        #     [
+        #         InlineKeyboardButton(
+        #             text='Закрыть' if device == 'forks' else 'Выключить',
+        #             callback_data=control_device.new(
+        #                 device=device,
+        #                 action='off'
+        #             )
+        #         )
+        #     ] if param == 'all' or param == 'close' else []
+        # ]
     )

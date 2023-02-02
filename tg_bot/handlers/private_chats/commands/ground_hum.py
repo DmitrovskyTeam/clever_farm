@@ -3,11 +3,11 @@ from aiogram.types import CallbackQuery
 
 from graph_creator import GraphCreator
 from tg_bot.filters.commands import CommandGroundHum
-from tg_bot.keyboards.inline import get_air_temp_hum_keyboard, choose_sensor_callback_data
+from tg_bot.keyboards.inline import choose_sensor_callback_data
 from tg_bot.keyboards.inline import get_ground_hum_keyboard
 from tg_bot.loader import dp
 from tg_bot.utils.Misc import get_reverse_list
-from tg_bot.utils.db_api import GroundValues
+from db_api import GroundValues
 
 
 ground_sensor_list = set()

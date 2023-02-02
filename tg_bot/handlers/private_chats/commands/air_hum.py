@@ -6,7 +6,7 @@ from tg_bot.filters.commands import CommandAirHum
 from tg_bot.keyboards.inline import choose_sensor_callback_data, get_air_temp_hum_keyboard
 from tg_bot.loader import dp
 from tg_bot.utils.Misc import get_reverse_list
-from tg_bot.utils.db_api import TempHumValues
+from db_api import TempHumValues
 
 hum_sensor_list = set()
 

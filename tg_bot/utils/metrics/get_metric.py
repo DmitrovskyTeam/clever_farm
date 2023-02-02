@@ -3,7 +3,7 @@ import datetime
 
 from data import SENSORS_TIMEOUT_REQUEST
 from farm_api_module import FarmApiModule
-from tg_bot.utils.db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues
+from db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues
 
 
 async def get_metric():

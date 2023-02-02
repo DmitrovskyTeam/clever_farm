@@ -10,6 +10,11 @@ from tg_bot.utils.db_api import TempHumValues
 temp_sensor_list = set()
 
 
+def get_reverse_list(target_list: list):
+    target_list.reverse()
+    return target_list
+
+
 @dp.message_handler(CommandAirTemp(), chat_type='private')
 async def air_temp_request(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
@@ -68,40 +73,27 @@ async def send_info(call: CallbackQuery):
                                    text='\n'.join(message_text))
     data_x = [sensor_value.timestamp.split(' ')[1].split('.')[0] for sensor_value in sensor_values]
     data_x.reverse()
-
-
-@dp.message_handler(CommandAirTemp(), chat_type='private')
-async def air_temp_request(message: types.Message):
-    await dp.bot.delete_message(chat_id=message.chat.id,
-                                message_id=message.message_id)
-    sensor_values = list()
-    for sensor_value in TempHumValues.select().order_by(TempHumValues.id.desc()).limit(10):
-        sensor_values.append({
-            'timestamp': sensor_value.timestamp,
-            'sensor1': sensor_value.sensor1.temperature,
-            'sensor2': sensor_value.sensor2.temperature,
-            'sensor3': sensor_value.sensor3.temperature,
-            'sensor4': sensor_value.sensor4.temperature
-        })
-    text = list()
-    for i in range(0, len(sensor_values)):
-        text.append(
-            f"<b>{sensor_values[i].get('timestamp').split('.')[0]}:   </b>{round((sensor_values[i].get('sensor1') + sensor_values[i].get('sensor2') + sensor_values[i].get('sensor3') + sensor_values[i].get('sensor4')) / 4, 2)}")
-    await message.answer(text='\n'.join(
-        [
-            'Последние 10 средних показаний с датчика температуры воздуха:',
-            *text
-        ]
-    ))
-    data_x = [sensor_value.get('timestamp').split(' ')[1].split('.')[0] for sensor_value in sensor_values]
-    data_y = [round((sensor_value.get('sensor1') + sensor_value.get('sensor2') + sensor_value.get(
-        'sensor3') + sensor_value.get('sensor4')) / 4, 2) for sensor_value in sensor_values]
-    data_y.reverse()
-    data_x.reverse()
+    data = list()
+    for sensor_num in temp_sensor_list:
+        data.append(
+            {
+                'label': "Средние значения",
+                'data_x': data_x,
+                'data_y': get_reverse_list([
+                    round((sensor_value.sensor1.temperature + sensor_value.sensor2.temperature + sensor_value.sensor3.temperature + sensor_value.sensor4.temperature) / 4,
+                          2)
+                    for sensor_value in sensor_values
+                ])
+            } if sensor_num == 5 else {
+                'label': f"Датчик температуры {sensor_num}",
+                'data_x': data_x,
+                'data_y': get_reverse_list([
+                    sensor_value.sensor1.temperature if sensor_num == 1 else sensor_value.sensor2.temperature if sensor_num == 2 else sensor_value.sensor3.temperature if sensor_num == 3 else sensor_value.sensor4.temperature
+                    for sensor_value in sensor_values
+                ])
+            }
+        )
     graph_creator = GraphCreator()
-    graph_creator.create_graph(
-        data_x=data_x,
-        data_y=data_y,
-        filename='air_temp.png'
-    )
-    await message.answer_photo(photo=open('air_temp.png', "rb"))
+    graph_creator.create_graph(data=data, output_filename='air_temp.png')
+    await dp.bot.send_photo(photo=open('air_temp.png', "rb"),
+                            chat_id=call.message.chat.id)

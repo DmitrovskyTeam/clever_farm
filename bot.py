@@ -22,4 +22,5 @@ async def on_shutdown(dispatcher):
 
 executor.start_polling(dispatcher=dp,
                        on_startup=on_startup,
-                       on_shutdown=on_shutdown)
+                       on_shutdown=on_shutdown,
+                       skip_updates=True)

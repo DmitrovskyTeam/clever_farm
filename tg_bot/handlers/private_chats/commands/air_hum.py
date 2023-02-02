@@ -92,4 +92,3 @@ async def send_info(call: CallbackQuery):
     graph_creator.create_graph(data=data, output_filename='air_hum.png')
     await dp.bot.send_photo(photo=open('air_hum.png', "rb"),
                             chat_id=call.message.chat.id)
-

@@ -5,14 +5,10 @@ from graph_creator import GraphCreator
 from tg_bot.filters.commands import CommandAirTemp
 from tg_bot.keyboards.inline import get_air_temp_hum_keyboard, air_tem_him_callback_data
 from tg_bot.loader import dp
+from tg_bot.utils.Misc import get_reverse_list
 from tg_bot.utils.db_api import TempHumValues
 
 temp_sensor_list = set()
-
-
-def get_reverse_list(target_list: list):
-    target_list.reverse()
-    return target_list
 
 
 @dp.message_handler(CommandAirTemp(), chat_type='private')

@@ -15,7 +15,7 @@ temp_sensor_list = set()
 async def air_temp_request(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
-    global hum_sensor_list
+    global temp_sensor_list
     temp_sensor_list.clear()
     await message.answer(text='Выберите, информацию с каких датчиков температуры Вы хотите получить',
                          reply_markup=get_air_temp_hum_keyboard(param='temp', sensor_list=temp_sensor_list))

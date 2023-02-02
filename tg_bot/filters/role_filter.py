@@ -9,9 +9,7 @@ class RoleFilter(BoundFilter):
     key = 'role_filter'
 
     def __init__(self, role_filter: typing.Optional[str] = None):
-        # super(RoleFilter, self).__init__()
         self.role_filter = role_filter
-        # self.key = 'role_filter'
 
     async def check(self, obj):
         if self.role_filter is None:

@@ -64,7 +64,7 @@ async def choose_action_for_device(call: types.CallbackQuery, callback_data: dic
             message_text = ''
             param = 'all'
     elif device[:-1] == 'water':
-        last_sensors_value = GroundValues.select().order_by(TempHumValues.id.desc()).limit(1)[0]
+        last_sensors_value = GroundValues.select().order_by(GroundValues.id.desc()).limit(1)[0]
         sensor_id = int(device[-1])
         cur_hum = last_sensors_value.sensor1.humidity if sensor_id == 1 else last_sensors_value.sensor2.humidity if sensor_id == 2 else last_sensors_value.sensor3.humidity if sensor_id == 3 else last_sensors_value.sensor4.humidity if sensor_id == 4 else last_sensors_value.sensor5.humidity if sensor_id == 5 else last_sensors_value.sensor6.humidity
         if cur_hum < MIN_GROUND_HUM:

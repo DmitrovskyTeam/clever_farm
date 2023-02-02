@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery
 
 from graph_creator import GraphCreator
 from tg_bot.filters.commands import CommandAirHum
-from tg_bot.keyboards.inline import air_tem_him_callback_data, get_air_temp_hum_keyboard
+from tg_bot.keyboards.inline import choose_sensor_callback_data, get_air_temp_hum_keyboard
 from tg_bot.loader import dp
 from tg_bot.utils.Misc import get_reverse_list
 from tg_bot.utils.db_api import TempHumValues
@@ -12,7 +12,7 @@ hum_sensor_list = set()
 
 
 @dp.message_handler(CommandAirHum(), chat_type='private')
-async def air_temp_request(message: types.Message):
+async def air_hum_request(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
     global hum_sensor_list
@@ -21,8 +21,8 @@ async def air_temp_request(message: types.Message):
                          reply_markup=get_air_temp_hum_keyboard(param='hum', sensor_list=hum_sensor_list))
 
 
-@dp.callback_query_handler(air_tem_him_callback_data.filter(param='hum'))
-async def add_item_to_temp_plot(call: CallbackQuery, callback_data: dict):
+@dp.callback_query_handler(choose_sensor_callback_data.filter(param='hum'))
+async def add_item_to_air_hum_list(call: CallbackQuery, callback_data: dict):
     await call.answer(cache_time=1)
     action = callback_data.get('action').split('_')[0]
     sensor_id = int(callback_data.get('action').split('_')[1])
@@ -35,8 +35,8 @@ async def add_item_to_temp_plot(call: CallbackQuery, callback_data: dict):
     )
 
 
-@dp.callback_query_handler(air_tem_him_callback_data.filter(param='complete_hum'))
-async def send_info(call: CallbackQuery):
+@dp.callback_query_handler(choose_sensor_callback_data.filter(param='complete_hum'))
+async def send_air_hum_info(call: CallbackQuery):
     global hum_sensor_list
     sensor_values = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(10)
     message_text = list()

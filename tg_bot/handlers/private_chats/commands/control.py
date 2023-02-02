@@ -38,7 +38,7 @@ async def no_action_waterflows(call: CallbackQuery):
 async def no_waterflow_system(call: types.CallbackQuery, callback_data: dict):
     device = callback_data.get('device')
     if device == 'forks':
-        last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)
+        last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)[0]
         cur_temp = (
                                last_sensors_value.sensor1.temperature + last_sensors_value.sensor2.temperature + last_sensors_value.sensor3.temperature + last_sensors_value.sensor4.temperature) / 4
         if cur_temp < 25:

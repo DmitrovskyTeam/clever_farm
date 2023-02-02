@@ -45,9 +45,10 @@ async def send_info(call: CallbackQuery):
             message_text.append(
                 '\n'.join(
                     [
-                        f"<b>{sensor_value.timestamp.split('.')[0]}</b> : {round((sensor_value.sensor1.temperature + sensor_value.sensor2.temperature + sensor_value.sensor3.temperature + sensor_value.sensor4.temperature) / 4, 2)}"
+                        f"<b>{sensor_value.timestamp.split('.')[0]}</b> : " +
+                        f"{round((sensor_value.sensor1.temperature + sensor_value.sensor2.temperature + sensor_value.sensor3.temperature + sensor_value.sensor4.temperature) / 4, 2)}"
                         for sensor_value in sensor_values
-                        ]
+                    ]
 
                 ))
         else:
@@ -55,9 +56,10 @@ async def send_info(call: CallbackQuery):
             message_text.append(
                 '\n'.join(
                     [
-                        f"<b>{sensor_value.timestamp.split('.')[0]}</b> : {sensor_value.sensor1.temperature if sensor_num == 1 else sensor_value.sensor2.temperature if sensor_num == 2 else sensor_value.sensor3.temperature if sensor_num == 3 else sensor_value.sensor4.temperature}"
+                        f"<b>{sensor_value.timestamp.split('.')[0]}</b> : " +
+                        f"{sensor_value.sensor1.temperature if sensor_num == 1 else sensor_value.sensor2.temperature if sensor_num == 2 else sensor_value.sensor3.temperature if sensor_num == 3 else sensor_value.sensor4.temperature}"
                         for sensor_value in sensor_values
-                        ]
+                    ]
                 )
             )
     await dp.bot.edit_message_text(chat_id=call.message.chat.id,
@@ -65,6 +67,7 @@ async def send_info(call: CallbackQuery):
                                    reply_markup=None,
                                    text='\n'.join(message_text))
     data_x = [sensor_value.timestamp.split(' ')[1].split('.')[0] for sensor_value in sensor_values]
+    data_x.reverse()
 
 
 @dp.message_handler(CommandAirTemp(), chat_type='private')

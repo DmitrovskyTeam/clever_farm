@@ -40,7 +40,8 @@ async def choose_action_for_device(call: types.CallbackQuery, callback_data: dic
     device = callback_data.get('device')
     if device == 'forks':
         last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)[0]
-        cur_temp = (last_sensors_value.sensor1.temperature + last_sensors_value.sensor2.temperature + last_sensors_value.sensor3.temperature + last_sensors_value.sensor4.temperature) / 4
+        cur_temp = (
+                               last_sensors_value.sensor1.temperature + last_sensors_value.sensor2.temperature + last_sensors_value.sensor3.temperature + last_sensors_value.sensor4.temperature) / 4
         if cur_temp < MIN_AIR_TEMP:
             message_text = f'\n\n<b>Температура воздуха ниже {MIN_AIR_TEMP}°. Возможность открытия форточек сейчас заблокирована</b>'
             param = 'close'
@@ -53,7 +54,8 @@ async def choose_action_for_device(call: types.CallbackQuery, callback_data: dic
             param = 'all'
     elif device == 'air_hum_system':
         last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)[0]
-        cur_hum = (last_sensors_value.sensor1.humidity + last_sensors_value.sensor2.humidity + last_sensors_value.sensor3.humidity + last_sensors_value.sensor4.humidity) / 4
+        cur_hum = (
+                              last_sensors_value.sensor1.humidity + last_sensors_value.sensor2.humidity + last_sensors_value.sensor3.humidity + last_sensors_value.sensor4.humidity) / 4
         if cur_hum < MIN_AIR_HUM:
             message_text = f'\n\n<b>Влажность воздуха ниже {MIN_AIR_HUM}%. Возможность выключения системы увлажнения сейчас заблокирована</b>'
             param = 'close'

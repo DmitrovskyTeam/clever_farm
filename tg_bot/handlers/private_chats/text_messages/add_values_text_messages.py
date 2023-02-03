@@ -23,24 +23,24 @@ async def get_air_temp_values(message: types.Message, state: FSMContext):
         temp_list = list(map(float, message.text.split(' ')))
     except:
         try:
-            await dp.bot.edit_message_text(chat_id=message.chat.id,
-                                           message_id=red_message,
-                                           reply_markup=None,
-                                           text='\n'.join(
-                                               [
-                                                   '<b>Проверьте правильность и формат присланных данных!</b>\n'
-                                                   'Пришлите данные температуры для 4х датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
-                                                   '\n<i>Для дробных чисел используйте символ "."</i>',
-                                                   '\nПример сообщения:',
-                                                   '<b><i>25.4 26.2 25.9 26</i></b>'
-                                               ]
-                                           ))
+            red_message = await dp.bot.edit_message_text(chat_id=message.chat.id,
+                                                         message_id=red_message,
+                                                         reply_markup=None,
+                                                         text='\n'.join(
+                                                             [
+                                                                 '<b>Проверьте правильность и формат присланных данных!</b>\n'
+                                                                 'Пришлите данные температуры для 4х датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
+                                                                 '\n<i>Для дробных чисел используйте символ "."</i>',
+                                                                 '\nПример сообщения:',
+                                                                 '<b><i>25.4 26.2 25.9 26</i></b>'
+                                                             ]
+                                                         ))
             return
         except:
             pass
     temp_hum_data['temperature'] = temp_list
     try:
-        await dp.bot.edit_message_text(chat_id=message.chat.id,
+        red_message = await dp.bot.edit_message_text(chat_id=message.chat.id,
                                                      message_id=red_message,
                                                      reply_markup=None,
                                                      text='\n'.join(
@@ -55,7 +55,7 @@ async def get_air_temp_values(message: types.Message, state: FSMContext):
     except:
         pass
     await AddValuesStates.wait_for_air_hum_values.set()
-    await state.update_data(red_message=red_message)
+    await state.update_data(red_message=red_message.message_id)
     await state.update_data(temp_hum_data=temp_hum_data)
 
 
@@ -74,18 +74,18 @@ async def get_air_hum_values(message: types.Message, state: FSMContext):
         hum_list = list(map(float, message.text.split(' ')))
     except:
         try:
-            await dp.bot.edit_message_text(chat_id=message.chat.id,
-                                           message_id=red_message,
-                                           reply_markup=None,
-                                           text='\n'.join(
-                                               [
-                                                   '<b>Проверьте правильность и формат присланных данных!</b>\n'
-                                                   'Пришлите данные влажности для 4х датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
-                                                   '\n<i>Для дробных чисел используйте символ "."</i>',
-                                                   '\nПример сообщения:',
-                                                   '<b><i>25.4 26.2 25.9 26</i></b>'
-                                               ]
-                                           ))
+            red_message = await dp.bot.edit_message_text(chat_id=message.chat.id,
+                                                         message_id=red_message,
+                                                         reply_markup=None,
+                                                         text='\n'.join(
+                                                             [
+                                                                 '<b>Проверьте правильность и формат присланных данных!</b>\n'
+                                                                 'Пришлите данные влажности для 4х датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
+                                                                 '\n<i>Для дробных чисел используйте символ "."</i>',
+                                                                 '\nПример сообщения:',
+                                                                 '<b><i>25.4 26.2 25.9 26</i></b>'
+                                                             ]
+                                                         ))
             return
         except:
             pass
@@ -109,17 +109,17 @@ async def get_air_hum_values(message: types.Message, state: FSMContext):
             humidity=temp_hum_data.get('humidity')[3]
         ),
     )
-    try:
-        await dp.bot.edit_message_text(chat_id=message.chat.id,
-                                       message_id=red_message,
-                                       reply_markup=None,
-                                       text='\n'.join(
-                                           [
-                                               'Показания датчиков температуры и влажности воздуха приняты!'
-                                           ]
-                                       ))
-    except:
-        pass
+    # try:
+    await dp.bot.edit_message_text(chat_id=message.chat.id,
+                                   message_id=red_message,
+                                   reply_markup=None,
+                                   text='\n'.join(
+                                       [
+                                           'Показания датчиков температуры и влажности воздуха приняты!'
+                                       ]
+                                   ))
+    # except:
+    #     pass
     await state.finish()
 
 
@@ -138,18 +138,18 @@ async def get_air_ground_values(message: types.Message, state: FSMContext):
         hum_list = list(map(float, message.text.split(' ')))
     except:
         try:
-            await dp.bot.edit_message_text(chat_id=message.chat.id,
-                                           message_id=red_message,
-                                           reply_markup=None,
-                                           text='\n'.join(
-                                               [
-                                                   '<b>Проверьте правильность и формат присланных данных!</b>\n'
-                                                   'Пришлите данные влажности почвы для 6и датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
-                                                   '\n<i>Для дробных чисел используйте символ "."</i>',
-                                                   '\nПример сообщения:',
-                                                   '<b><i>25.4 26.2 25.9 26 25.9 26</i></b>'
-                                               ]
-                                           ))
+            red_message = await dp.bot.edit_message_text(chat_id=message.chat.id,
+                                                         message_id=red_message,
+                                                         reply_markup=None,
+                                                         text='\n'.join(
+                                                             [
+                                                                 '<b>Проверьте правильность и формат присланных данных!</b>\n'
+                                                                 'Пришлите данные влажности почвы для 6и датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
+                                                                 '\n<i>Для дробных чисел используйте символ "."</i>',
+                                                                 '\nПример сообщения:',
+                                                                 '<b><i>25.4 26.2 25.9 26 25.9 26</i></b>'
+                                                             ]
+                                                         ))
             return
         except:
             pass
@@ -176,16 +176,15 @@ async def get_air_ground_values(message: types.Message, state: FSMContext):
         ),
     )
     try:
-        await dp.bot.edit_message_text(chat_id=message.chat.id,
-                                       message_id=red_message,
-                                       reply_markup=None,
-                                       text='\n'.join(
-                                           [
-                                               'Показания датчиков влажности почвы приняты!'
-                                           ]
-                                       )
-                                       )
+        red_message = await dp.bot.edit_message_text(chat_id=message.chat.id,
+                                                     message_id=red_message,
+                                                     reply_markup=None,
+                                                     text='\n'.join(
+                                                         [
+                                                             'Показания датчиков влажности почвы приняты!'
+                                                         ]
+                                                     )
+                                                     )
     except:
         pass
     await state.finish()
-

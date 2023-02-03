@@ -34,7 +34,7 @@ async def add_temp_hum_values(call: CallbackQuery, state: FSMContext):
                                                      ]
                                                  ))
     await AddValuesStates.wait_for_air_temp_values.set()
-    await state.update_data(red_message_id=red_message.message_id)
+    await state.update_data(red_message=red_message.message_id)
 
 
 @dp.callback_query_handler(
@@ -44,16 +44,16 @@ async def add_temp_hum_values(call: CallbackQuery, state: FSMContext):
 )
 async def add_ground_hum_values(call: CallbackQuery, state: FSMContext):
     red_message = await dp.bot.edit_message_text(chat_id=call.message.chat.id,
-                                   message_id=call.message.message_id,
-                                   reply_markup=None,
-                                   text='\n'.join(
-                                       [
-                                           'Пришлите данные влажности почвы для 6и датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
-                                           '\n<i>Для дробных чисел используйте символ "."</i>',
-                                           '\nПример сообщения:',
-                                           '<b><i>50.4 54.2 55.9 56 55.9 56</i></b>'
-                                       ]
-                                   ))
+                                                 message_id=call.message.message_id,
+                                                 reply_markup=None,
+                                                 text='\n'.join(
+                                                     [
+                                                         'Пришлите данные влажности почвы для 6и датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
+                                                         '\n<i>Для дробных чисел используйте символ "."</i>',
+                                                         '\nПример сообщения:',
+                                                         '<b><i>50.4 54.2 55.9 56 55.9 56</i></b>'
+                                                     ]
+                                                 ))
     await AddValuesStates.wait_for_ground_hum_values.set()
     await state.update_data(red_message=red_message.message_id)
 

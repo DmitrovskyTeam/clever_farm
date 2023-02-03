@@ -4,8 +4,8 @@ from aiogram.types import CallbackQuery
 from data import MIN_AIR_TEMP, MAX_AIR_TEMP, MIN_AIR_HUM, MAX_AIR_HUM, MIN_GROUND_HUM, MAX_GROUND_HUM
 from db_api import TempHumValues, GroundValues
 from farm_api_module import FarmApiModule
-from tg_bot.filters.commands import CommandControl
-from tg_bot.keyboards.inline import control_markup, control_device, get_action_markup
+from tg_bot.filters.commands import CommandControl, CommandForceControl
+from tg_bot.keyboards.inline import get_control_markup, control_device, get_action_markup
 from tg_bot.loader import dp
 
 
@@ -14,7 +14,15 @@ async def control_command_with_admin(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
     await message.answer(text='Выберите, чем хотите управлять',
-                         reply_markup=control_markup)
+                         reply_markup=get_control_markup(force_control='off'))
+
+
+@dp.message_handler(CommandForceControl(), chat_type='private', role_filter='admin')
+async def control_command_with_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Выберите, чем хотите управлять',
+                         reply_markup=get_control_markup(force_control='on'))
 
 
 @dp.callback_query_handler(
@@ -38,43 +46,56 @@ async def no_action_waterflows(call: CallbackQuery):
 )
 async def choose_action_for_device(call: types.CallbackQuery, callback_data: dict):
     device = callback_data.get('device')
+    force_control = callback_data.get('force_control')
     if device == 'forks':
         last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)[0]
-        cur_temp = (
-                               last_sensors_value.sensor1.temperature + last_sensors_value.sensor2.temperature + last_sensors_value.sensor3.temperature + last_sensors_value.sensor4.temperature) / 4
-        if cur_temp < MIN_AIR_TEMP:
-            message_text = f'\n\n<b>Температура воздуха ниже {MIN_AIR_TEMP}°. Возможность открытия форточек сейчас заблокирована</b>'
-            param = 'close'
+        if force_control == 'off':
+            cur_temp = (
+                                   last_sensors_value.sensor1.temperature + last_sensors_value.sensor2.temperature + last_sensors_value.sensor3.temperature + last_sensors_value.sensor4.temperature) / 4
+            if cur_temp < MIN_AIR_TEMP:
+                message_text = f'\n\n<b>Температура воздуха ниже {MIN_AIR_TEMP}°. Возможность открытия форточек сейчас заблокирована</b>'
+                param = 'close'
 
-        elif cur_temp > MAX_AIR_TEMP:
-            message_text = f'\n\n<b>Температура воздуха выше {MAX_AIR_TEMP}°. Возможность закрытия форточек сейчас заблокирована</b>'
-            param = 'open'
+            elif cur_temp > MAX_AIR_TEMP:
+                message_text = f'\n\n<b>Температура воздуха выше {MAX_AIR_TEMP}°. Возможность закрытия форточек сейчас заблокирована</b>'
+                param = 'open'
+            else:
+                message_text = ''
+                param = 'all'
         else:
             message_text = ''
             param = 'all'
     elif device == 'air_hum_system':
         last_sensors_value = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(1)[0]
-        cur_hum = (
-                              last_sensors_value.sensor1.humidity + last_sensors_value.sensor2.humidity + last_sensors_value.sensor3.humidity + last_sensors_value.sensor4.humidity) / 4
-        if cur_hum < MIN_AIR_HUM:
-            message_text = f'\n\n<b>Влажность воздуха ниже {MIN_AIR_HUM}%. Возможность выключения системы увлажнения сейчас заблокирована</b>'
-            param = 'close'
-        elif cur_hum > MAX_AIR_HUM:
-            message_text = '\n\n<b>Влажность воздуха выше {MAX_AIR_HUM}%. Возможность включения системы увлажнения сейчас заблокирована</b>'
-            param = 'open'
+        if force_control == 'off':
+            cur_hum = (
+                                  last_sensors_value.sensor1.humidity + last_sensors_value.sensor2.humidity + last_sensors_value.sensor3.humidity + last_sensors_value.sensor4.humidity) / 4
+            if cur_hum < MIN_AIR_HUM:
+                message_text = f'\n\n<b>Влажность воздуха ниже {MIN_AIR_HUM}%. Возможность выключения системы увлажнения сейчас заблокирована</b>'
+                param = 'close'
+            elif cur_hum > MAX_AIR_HUM:
+                message_text = '\n\n<b>Влажность воздуха выше {MAX_AIR_HUM}%. Возможность включения системы увлажнения сейчас заблокирована</b>'
+                param = 'open'
+            else:
+                message_text = ''
+                param = 'all'
         else:
             message_text = ''
             param = 'all'
     elif device[:-1] == 'water':
         last_sensors_value = GroundValues.select().order_by(GroundValues.id.desc()).limit(1)[0]
         sensor_id = int(device[-1])
-        cur_hum = last_sensors_value.sensor1.humidity if sensor_id == 1 else last_sensors_value.sensor2.humidity if sensor_id == 2 else last_sensors_value.sensor3.humidity if sensor_id == 3 else last_sensors_value.sensor4.humidity if sensor_id == 4 else last_sensors_value.sensor5.humidity if sensor_id == 5 else last_sensors_value.sensor6.humidity
-        if cur_hum < MIN_GROUND_HUM:
-            message_text = f'\n\n<b>Влажность борозды {int(device[-1])} ниже {MIN_GROUND_HUM}%. Возможность выключения системы полива этой борозды сейчас заблокирована</b>'
-            param = 'open'
-        elif cur_hum > MAX_GROUND_HUM:
-            message_text = f'\n\n<b>Влажность борозды {int(device[-1])} выше {MAX_GROUND_HUM}%. Возможность включения системы полива этой борозды сейчас заблокирована</b>'
-            param = 'close'
+        if force_control == 'off':
+            cur_hum = last_sensors_value.sensor1.humidity if sensor_id == 1 else last_sensors_value.sensor2.humidity if sensor_id == 2 else last_sensors_value.sensor3.humidity if sensor_id == 3 else last_sensors_value.sensor4.humidity if sensor_id == 4 else last_sensors_value.sensor5.humidity if sensor_id == 5 else last_sensors_value.sensor6.humidity
+            if cur_hum < MIN_GROUND_HUM:
+                message_text = f'\n\n<b>Влажность борозды {int(device[-1])} ниже {MIN_GROUND_HUM}%. Возможность выключения системы полива этой борозды сейчас заблокирована</b>'
+                param = 'open'
+            elif cur_hum > MAX_GROUND_HUM:
+                message_text = f'\n\n<b>Влажность борозды {int(device[-1])} выше {MAX_GROUND_HUM}%. Возможность включения системы полива этой борозды сейчас заблокирована</b>'
+                param = 'close'
+            else:
+                message_text = ''
+                param = 'all'
         else:
             message_text = ''
             param = 'all'
@@ -82,7 +103,7 @@ async def choose_action_for_device(call: types.CallbackQuery, callback_data: dic
         chat_id=call.message.chat.id,
         message_id=call.message.message_id,
         text='Выберите действие' + message_text,
-        reply_markup=get_action_markup(device, param)
+        reply_markup=get_action_markup(device, param, force_control=force_control)
     )
 
 

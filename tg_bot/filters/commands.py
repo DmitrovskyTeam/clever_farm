@@ -24,3 +24,8 @@ class CommandControl(Command):
 class CommandAddValues(Command):
     def __init__(self):
         super().__init__(['add_values'])
+
+
+class CommandForceControl(Command):
+    def __init__(self):
+        super().__init__(['force_control'])

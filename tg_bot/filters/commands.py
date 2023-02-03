@@ -19,3 +19,8 @@ class CommandGroundHum(Command):
 class CommandControl(Command):
     def __init__(self):
         super().__init__(['control'])
+
+
+class CommandAddValues(Command):
+    def __init__(self):
+        super().__init__(['add_values'])

@@ -3,7 +3,7 @@ import datetime
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
-from db_api import TempHumValues, TempHumSensor, GroundValues
+from db_api import TempHumValues, TempHumSensor, GroundValues, GroundSensor
 from tg_bot.loader import dp
 from tg_bot.states import AddValuesStates
 
@@ -14,7 +14,7 @@ from tg_bot.states import AddValuesStates
                     state=AddValuesStates.wait_for_air_temp_values)
 async def get_air_temp_values(message: types.Message, state: FSMContext):
     temp_hum_data = dict()
-    red_message = (await state.get_data()).get('red_message_id')
+    red_message = (await state.get_data()).get('red_message')
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
     try:
@@ -41,7 +41,7 @@ async def get_air_temp_values(message: types.Message, state: FSMContext):
     temp_hum_data['temperature'] = temp_list
     try:
         await dp.bot.edit_message_text(chat_id=message.chat.id,
-                                                     message_id=red_message_id,
+                                                     message_id=red_message,
                                                      reply_markup=None,
                                                      text='\n'.join(
                                                          [
@@ -55,7 +55,7 @@ async def get_air_temp_values(message: types.Message, state: FSMContext):
     except:
         pass
     await AddValuesStates.wait_for_air_hum_values.set()
-    await state.update_data(red_message=red_message.message_id)
+    await state.update_data(red_message=red_message)
     await state.update_data(temp_hum_data=temp_hum_data)
 
 
@@ -64,7 +64,7 @@ async def get_air_temp_values(message: types.Message, state: FSMContext):
                     role_filter='admin',
                     state=AddValuesStates.wait_for_air_hum_values)
 async def get_air_hum_values(message: types.Message, state: FSMContext):
-    red_message = (await state.get_data()).get('red_message_id')
+    red_message = (await state.get_data()).get('red_message')
     temp_hum_data = (await state.get_data()).get('temp_hum_data')
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
@@ -128,12 +128,12 @@ async def get_air_hum_values(message: types.Message, state: FSMContext):
                     role_filter='admin',
                     state=AddValuesStates.wait_for_ground_hum_values)
 async def get_air_ground_values(message: types.Message, state: FSMContext):
-    red_message = (await state.get_data()).get('red_message_id')
+    red_message = (await state.get_data()).get('red_message')
     ground_hum_data = dict()
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
     try:
-        if len(message.text.split(' ')) != 4:
+        if len(message.text.split(' ')) != 6:
             raise Exception()
         hum_list = list(map(float, message.text.split(' ')))
     except:
@@ -156,22 +156,22 @@ async def get_air_ground_values(message: types.Message, state: FSMContext):
     ground_hum_data['humidity'] = hum_list
     GroundValues.create(
         timestamp=datetime.datetime.now(),
-        sensor1=TempHumSensor.create(
+        sensor1=GroundSensor.create(
             humidity=ground_hum_data.get('humidity')[0]
         ),
-        sensor2=TempHumSensor.create(
+        sensor2=GroundSensor.create(
             humidity=ground_hum_data.get('humidity')[1]
         ),
-        sensor3=TempHumSensor.create(
+        sensor3=GroundSensor.create(
             humidity=ground_hum_data.get('humidity')[2]
         ),
-        sensor4=TempHumSensor.create(
+        sensor4=GroundSensor.create(
             humidity=ground_hum_data.get('humidity')[3]
         ),
-        sensor5=TempHumSensor.create(
+        sensor5=GroundSensor.create(
             humidity=ground_hum_data.get('humidity')[4]
         ),
-        sensor6=TempHumSensor.create(
+        sensor6=GroundSensor.create(
             humidity=ground_hum_data.get('humidity')[5]
         ),
     )
@@ -183,7 +183,9 @@ async def get_air_ground_values(message: types.Message, state: FSMContext):
                                            [
                                                'Показания датчиков влажности почвы приняты!'
                                            ]
-                                       ))
+                                       )
+                                       )
     except:
         pass
     await state.finish()
+

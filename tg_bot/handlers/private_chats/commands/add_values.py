@@ -51,7 +51,7 @@ async def add_ground_hum_values(call: CallbackQuery, state: FSMContext):
                                            'Пришлите данные влажности почвы для 6и датчиков одним сообщением в одну строку, разделяя показания символом пробела.',
                                            '\n<i>Для дробных чисел используйте символ "."</i>',
                                            '\nПример сообщения:',
-                                           '<b><i>50.4 54.2 55.9 56</i></b>'
+                                           '<b><i>50.4 54.2 55.9 56 55.9 56</i></b>'
                                        ]
                                    ))
     await AddValuesStates.wait_for_ground_hum_values.set()

@@ -20,6 +20,7 @@ async def set_commands(dp: Dispatcher, chat_id: str):
             types.BotCommand("airhum", "Влажность воздуха"),
             types.BotCommand("groundhum", "Влажность грунта"),
             types.BotCommand("control", "Управление"),
+            types.BotCommand('add_values', "Добавить показания датчиков"),
             types.BotCommand("help", "Вывести справку"),
         ],
         scope=BotCommandScopeChat(

@@ -22,6 +22,7 @@ async def set_commands(dp: Dispatcher, chat_id: str):
             types.BotCommand("control", "Управление"),
             types.BotCommand("force_control", "Принудительное управление"),
             types.BotCommand('add_values', "Добавить показания датчиков"),
+            types.BotCommand('set_params', "Изменить параметры"),
             types.BotCommand("help", "Вывести справку"),
         ],
         scope=BotCommandScopeChat(

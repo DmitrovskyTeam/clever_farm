@@ -1,6 +1,6 @@
 from ..loader import dp
 from .commands import CommandAirTemp, CommandControl, CommandAirHum, CommandGroundHum, CommandAddValues, \
-    CommandForceControl
+    CommandForceControl, CommandSetParams
 from .role_filter import RoleFilter
 
 if __name__ == "tg_bot.filters":
@@ -8,4 +8,4 @@ if __name__ == "tg_bot.filters":
     pass
 
 __all__ = [CommandAirTemp, CommandControl, CommandAirHum, CommandGroundHum, RoleFilter, CommandAddValues,
-           CommandForceControl, dp]
+           CommandForceControl, CommandSetParams, dp]

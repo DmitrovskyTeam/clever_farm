@@ -1,11 +1,17 @@
 import logging
 
-from peewee import SqliteDatabase
+from peewee import SqliteDatabase, PostgresqlDatabase
 
 from data import DATABASE_PATH, MIN_AIR_TEMP, MAX_AIR_TEMP, MIN_AIR_HUM, MAX_AIR_HUM, MIN_GROUND_HUM, MAX_GROUND_HUM, \
-    SENSORS_TIMEOUT_REQUEST
+    SENSORS_TIMEOUT_REQUEST, POSTGRES_DB, POSTGRES_SERVER, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PORT
 
-db = SqliteDatabase(database=DATABASE_PATH, pragmas={'foreign_keys': 1})
+# db = SqliteDatabase(database=DATABASE_PATH, pragmas={'foreign_keys': 1})
+
+db = PostgresqlDatabase(database=POSTGRES_DB,
+                        host=POSTGRES_SERVER,
+                        user=POSTGRES_USER,
+                        password=POSTGRES_PASSWORD,
+                        port=POSTGRES_PORT)
 
 from .db_models import TempHumSensor, TempHumValues, GroundSensor, GroundValues, SystemParams
 

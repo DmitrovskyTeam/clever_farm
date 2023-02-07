@@ -1,4 +1,4 @@
-from peewee import Model, FloatField, DateTimeField, ForeignKeyField, BooleanField
+from peewee import Model, FloatField, DateTimeField, ForeignKeyField
 
 from . import db
 

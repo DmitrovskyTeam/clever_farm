@@ -8,7 +8,7 @@ from tg_bot.states import SetParamsStates
 
 
 @dp.message_handler(CommandSetParams(), chat_type='private', role_filter='admin')
-async def set_params_handler_amdin(message: types.Message):
+async def set_params_handler_admin(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
     await message.answer(text='Выберите параметр для изменения',

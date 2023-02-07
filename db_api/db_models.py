@@ -1,4 +1,4 @@
-from peewee import Model, FloatField, DateTimeField, ForeignKeyField
+from peewee import Model, FloatField, DateTimeField, ForeignKeyField, BooleanField
 
 from . import db
 
@@ -33,3 +33,13 @@ class GroundValues(BaseModel):
     sensor4 = ForeignKeyField(GroundSensor, backref='all_values')
     sensor5 = ForeignKeyField(GroundSensor, backref='all_values')
     sensor6 = ForeignKeyField(GroundSensor, backref='all_values')
+
+
+class SystemParams(BaseModel):
+    min_air_temp = FloatField()
+    max_air_temp = FloatField()
+    min_air_hum = FloatField()
+    max_air_hum = FloatField()
+    min_ground_hum = FloatField()
+    max_ground_hum = FloatField()
+    request_timeout = FloatField()

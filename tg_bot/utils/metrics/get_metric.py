@@ -1,9 +1,9 @@
 import asyncio
 import datetime
 
-from data import SENSORS_TIMEOUT_REQUEST
+# from data import SENSORS_TIMEOUT_REQUEST
 from farm_api_module import FarmApiModule
-from db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues
+from db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues, SystemParams
 
 
 async def get_metric():
@@ -12,6 +12,7 @@ async def get_metric():
     tem_hum_values = dict()
     cur_ground_hum = list()
     ground_hum_values = dict()
+    system_params: SystemParams = SystemParams.select().order_by(SystemParams.id.desc()).limit(1)[0]
     while True:
         for i in range(0, 4):
             cur_air_temp_hum.append(farm_module.get_air_temp_hum(sensor_id=i + 1))
@@ -42,4 +43,4 @@ async def get_metric():
         tem_hum_values.clear()
         cur_ground_hum.clear()
         ground_hum_values.clear()
-        await asyncio.sleep(SENSORS_TIMEOUT_REQUEST)
+        await asyncio.sleep(system_params.request_timeout)

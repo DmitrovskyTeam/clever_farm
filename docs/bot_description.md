@@ -170,7 +170,63 @@ async def add_item_ground_hum_list(call: CallbackQuery, callback_data: dict):
 
 ### /control
 
+Предварительно происходит проверка, что у пользователя есть повышенные права пользователя. Код фильтра ```role_filter``` находится в файле [role_filter.py](../tg_bot/filters/role_filter.py):
+
+```python
+class RoleFilter(BoundFilter):
+    key = 'role_filter'
+
+    def __init__(self, role_filter: typing.Optional[str] = None):
+        self.role_filter = role_filter
+
+    async def check(self, obj):
+        if self.role_filter is None:
+            return
+        if isinstance(obj, Message):
+            if self.role_filter == 'admin':
+                return str(obj.chat.id) in ADMINS
+        if isinstance(obj, CallbackQuery):
+            if self.role_filter == 'admin':
+                return str(obj.message.chat.id) in ADMINS
+        return False
+```
+И при получении команды с помощью этого фильтра происходит проверка наличия прав и выбор дальнейшего действия:
+```python
+@dp.message_handler(CommandControl(), chat_type='private', role_filter='admin')
+async def control_command_with_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Выберите, чем хотите управлять',
+                         reply_markup=get_control_markup(force_control='off'))
+
+
+@dp.message_handler(CommandControl(), chat_type='private')
+async def control_command_no_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Команда /control доступна только администраторам')
+```
+После выбора данной команды бот предлагает выбрать какими системами пользователь хочет управлять. 
+
 ### /force_control
+
+Аналогично с предыдущей командой происходит обработка получения команды принудительного управления:
+
+```python
+@dp.message_handler(CommandForceControl(), chat_type='private', role_filter='admin')
+async def control_command_with_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Выберите, чем хотите управлять',
+                         reply_markup=get_control_markup(force_control='on'))
+
+
+@dp.message_handler(CommandForceControl(), chat_type='private')
+async def control_command_no_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Команда /force_control доступна только администраторам')
+```
 
 ### /add_values
 

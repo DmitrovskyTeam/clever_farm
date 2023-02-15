@@ -18,13 +18,10 @@
 ### Описание библиотеки [peewee](https://docs.peewee-orm.com/en/latest/)
 
 
-
 ### Описание библиотеки [matplotlib](https://matplotlib.org/)
 
 
-
 ### Описание библиотеки [requests](https://requests.readthedocs.io/en/latest/)
-
 
 
 ### Описание библиотеки [unittest](https://docs.python.org/3/library/unittest.html)

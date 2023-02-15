@@ -19,11 +19,11 @@
 ### Содержание
 1. [Техническое задание](https://docs.google.com/document/d/1yNu_mfNUTXRuimC1jlhbPLuVora4HbI8)
 2. [Процесс запуска](./docs/start_bot.md)
-3. [Описание решения команды](./docs/bot_description.md)
-4. [Выбор и описание используемых инструментов](./docs/libraries.md)
-5. [Работа с API умной теплицы](./docs/farm_api_description.md)
-6. [Unit-тестирование](./docs/unittests.md)
-7. [Схема базы данных](./docs/db_scheme.md)
+3. [Выбор и описание используемых инструментов](./docs/libraries.md)
+4. [Описание решения команды](./docs/bot_description.md)
+5. [Схема базы данных](./docs/db_scheme.md)
+6. [Работа с API умной теплицы](./docs/farm_api_description.md)
+7. [Unit-тестирование](./docs/unittests.md)
 8. [Примеры работы бота](./docs/examples.md)
 9. [Список источников](./docs/sources_list.md)
 ---

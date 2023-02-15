@@ -208,6 +208,8 @@ async def control_command_no_admin(message: types.Message):
 ```
 После выбора данной команды бот предлагает выбрать какими системами пользователь хочет управлять. 
 
+Более подробно ознакомиться с кодом команды можно в файле [control.py](../tg_bot/handlers/private_chats/commands/control.py).
+
 ### /force_control
 
 Аналогично с предыдущей командой происходит обработка получения команды принудительного управления:
@@ -227,6 +229,9 @@ async def control_command_no_admin(message: types.Message):
                                 message_id=message.message_id)
     await message.answer(text='Команда /force_control доступна только администраторам')
 ```
+После выбора данной команды бот предлагает выбрать какими системами пользователь хочет управлять. 
+
+Более подробно ознакомиться с кодом команды можно в файле [control.py](../tg_bot/handlers/private_chats/commands/control.py).
 
 ### /add_values
 

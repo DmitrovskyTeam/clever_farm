@@ -235,6 +235,87 @@ async def control_command_no_admin(message: types.Message):
 
 ### /add_values
 
+Аналогично командам управления, команда добавления показаний доступна только администраторам бота:
+
+```python
+@dp.message_handler(CommandAddValues(), chat_type='private', role_filter='admin')
+async def add_values_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Выберите, данные каких датчиков вы хотите внести вручную',
+                         reply_markup=add_values_keyboard)
+
+
+@dp.message_handler(CommandAddValues(), chat_type='private')
+async def add_values_no_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Команда /add_values доступна только администраторам')
+```
+
+Если пользователь выбирает датчики температуры и влажности, то бот последовательно запросит сначала показания температуры со всех датчиков и затем показания влажности. Пользователю необходимо будет последовательно прислать показания для всех датчиков - в одном сообщении через пробелы данные температуры и в следующем - данные влажности.
+
+Более подробно ознакомиться с кодом команды можно в файле [add_values.py](../tg_bot/handlers/private_chats/commands/add_values.py).
+
 ### /set_params
+
+При первом запуске в базу данных заносится информация о границах интервалов нормальных значений параметров и периода обращений к API теплицы из конфигурационного файла ```.env```. При последующих запусках/перезапуске бота информация будет браться уже из базы данных. С помощью этой команды эти параметры можно изменять. Аналогично с командами управления системами теплицы и внесения показаний с датчиков вручную эта команда доступна только администраторам бота:
+
+```python
+@dp.message_handler(CommandSetParams(), chat_type='private', role_filter='admin')
+async def set_params_handler_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Выберите параметр для изменения',
+                         reply_markup=set_params_keyboard)
+
+
+@dp.message_handler(CommandSetParams(), chat_type='private')
+async def set_params_handler_no_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Команда доступна только администраторам',
+                         reply_markup=None)
+```
+
+После выбора параметра для изменения, бот для конкретного пользователя переходит в состояние ожидания выбранного параметра и при получении текстового сообщения обновляет параметр в базе данных:
+
+```python
+@dp.callback_query_handler(set_params_callback.filter(),
+                           chat_type='private',
+                           role_filter='admin')
+async def set_param_current_param(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    param = callback_data.get('param')
+    arg = callback_data.get('arg')
+    if param == 'air_temp':
+        if arg == 'min':
+            param_value = '<b>Минимальная температура воздуха</b>'
+            await SetParamsStates.set_min_air_temp.set()
+        if arg == 'max':
+            param_value = '<b>Максимальная температура воздуха</b>'
+            await SetParamsStates.set_max_air_temp.set()
+    elif param == 'air_hum':
+        if arg == 'min':
+            param_value = '<b>Минимальная влажность воздуха</b>'
+            await SetParamsStates.set_min_air_hum.set()
+        if arg == 'max':
+            param_value = '<b>Максимальная влажность воздуха</b>'
+            await SetParamsStates.set_max_air_hum.set()
+    elif param == 'ground_hum':
+        if arg == 'min':
+            param_value = '<b>Минимальная влажность почвы</b>'
+            await SetParamsStates.set_min_ground_hum.set()
+        if arg == 'max':
+            param_value = '<b>Максимальная влажность почвы</b>'
+            await SetParamsStates.set_max_ground_hum.set()
+    red_message: types.Message = await dp.bot.edit_message_text(chat_id=call.message.chat.id,
+                                                                message_id=call.message.message_id,
+                                                                reply_markup=None,
+                                                                text=f'Введите новое значение для параметра {param_value}')
+    await state.update_data(red_message=red_message.message_id)
+    await state.update_data(param_value=param_value)
+```
+
+Более подробно ознакомиться с кодом команды можно в файле [set_params.py](../tg_bot/handlers/private_chats/commands/set_params.py).
 
 ### /help

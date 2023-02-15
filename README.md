@@ -15,10 +15,6 @@
  -
  -
 ```
-
-
-### Telegram-бот для управления умной теплицей
-
 ---
 ### Содержание
 1. [Техническое задание](https://docs.google.com/document/d/1yNu_mfNUTXRuimC1jlhbPLuVora4HbI8)
@@ -31,8 +27,6 @@
 8. [Примеры работы бота](./docs/examples.md)
 9. [Список источников](./docs/sources_list.md)
 ---
-
-
 
 ### Ссылка на Telegram-бота: [![](https://web.telegram.org/k/assets/img/favicon.ico)](https://t.me/SmartGreeen_bot)
 

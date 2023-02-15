@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 
-# from data import SENSORS_TIMEOUT_REQUEST
 from farm_api_module import FarmApiModule
 from db_api import TempHumSensor, TempHumValues, GroundSensor, GroundValues, SystemParams
 

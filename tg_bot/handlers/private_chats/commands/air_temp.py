@@ -26,7 +26,7 @@ async def add_item_to_temp_plot(call: CallbackQuery, callback_data: dict):
     await call.answer(cache_time=1)
     action = callback_data.get('action').split('_')[0]
     sensor_id = int(callback_data.get('action').split('_')[1])
-    global hum_sensor_list
+    global temp_sensor_list
     temp_sensor_list.add(sensor_id) if action == 'add' else temp_sensor_list.remove(sensor_id)
     await dp.bot.edit_message_reply_markup(
         reply_markup=get_air_temp_hum_keyboard(param='temp', sensor_list=temp_sensor_list),
@@ -37,7 +37,7 @@ async def add_item_to_temp_plot(call: CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(choose_sensor_callback_data.filter(param='complete_temp'))
 async def send_info(call: CallbackQuery):
-    global hum_sensor_list
+    global tempsensor_list
     sensor_values = TempHumValues.select().order_by(TempHumValues.id.desc()).limit(10)
     message_text = list()
     for sensor_num in temp_sensor_list:

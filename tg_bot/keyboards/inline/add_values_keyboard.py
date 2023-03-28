@@ -13,7 +13,7 @@ add_values_keyboard = InlineKeyboardMarkup(
                 )
             )
         ],
-[
+        [
             InlineKeyboardButton(
                 text='Влажность почвы',
                 callback_data=add_values_callback_data.new(

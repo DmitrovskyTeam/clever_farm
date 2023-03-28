@@ -150,3 +150,10 @@ async def control_command_no_admin(message: types.Message):
     await dp.bot.delete_message(chat_id=message.chat.id,
                                 message_id=message.message_id)
     await message.answer(text='Команда /control доступна только администраторам')
+
+
+@dp.message_handler(CommandForceControl(), chat_type='private')
+async def control_command_no_admin(message: types.Message):
+    await dp.bot.delete_message(chat_id=message.chat.id,
+                                message_id=message.message_id)
+    await message.answer(text='Команда /force_control доступна только администраторам')
